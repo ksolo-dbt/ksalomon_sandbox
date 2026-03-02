@@ -28,7 +28,7 @@ final as (
         customer.customer_key,
         customer.name,
         customer.address,
-        --- Break the contract 
+        --- Break the contract making new comment
         -- nation.nation_key as nation_key, 
         nation.name as nation,
         --- Break the contract again
