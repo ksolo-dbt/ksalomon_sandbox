@@ -86,16 +86,16 @@ models:
           select: ['dashboard_user']
       aggregates:
         agg_ship_modes_dynamic_pivot:
-          +static_analysis: unsafe
+          +static_analysis: strict
     
     demo_examples:
       utils:
         all_days:
-          +static_analysis: unsafe
+          +static_analysis: strict
     
     utils:
       time_spine_daily:
-        +static_analysis: unsafe
+        +static_analysis: strict
 seeds:
   kyle_sa_hybrid:
     snowflake_contract_rates:
