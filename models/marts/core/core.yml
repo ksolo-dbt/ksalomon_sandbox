@@ -412,7 +412,7 @@ models:
         numerator: total_revenue
         denominator: total_customers
 
-# Cross-model metrics
+# Cross-model metrics (latest spec: top-level expr + input_metrics for dbt Fusion)
 metrics:
   - name: total_profit
     description: The total profit for the business
