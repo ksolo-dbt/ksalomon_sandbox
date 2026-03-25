@@ -15,8 +15,8 @@ renamed as (
         response_time as review_time,
         review_text as review_txt,
     case 
-        when sentiment_value = 0 then -1
-        else 1
+        when sentiment_value = 0 then -2
+        else 2
     end as actual_sentiment
 
     from source
