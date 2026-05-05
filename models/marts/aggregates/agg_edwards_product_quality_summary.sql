@@ -31,23 +31,19 @@ with batch_stats as (
 event_stats as (
 
     select
-        products.business_unit,
-        products.device_family,
-        batches.product_id,
-        date_trunc('month', batches.production_date)           as month,
-        count(*)                                               as total_quality_events,
-        count_if(quality_events.event_type = 'Field Complaint') as total_field_complaints,
-        count_if(quality_events.severity = 'CRITICAL')         as total_critical_events
-    from {{ ref('stg_edwards_lifesciences_production_batches') }} as batches
-    left join {{ ref('stg_edwards_lifesciences_product_master') }} as products
-        on batches.product_id = products.product_id
-    left join {{ ref('stg_edwards_lifesciences_quality_events') }} as quality_events
-        on batches.batch_id = quality_events.batch_id
+        business_unit,
+        device_family,
+        product_id,
+        date_trunc('month', production_date)            as month,
+        count(*)                                        as total_quality_events,
+        count_if(event_type = 'Field Complaint')        as total_field_complaints,
+        count_if(severity = 'CRITICAL')                 as total_critical_events
+    from {{ ref('int_edwards_batch_events') }}
     group by
-        products.business_unit,
-        products.device_family,
-        batches.product_id,
-        date_trunc('month', batches.production_date)
+        business_unit,
+        device_family,
+        product_id,
+        date_trunc('month', production_date)
 
 ),
 
