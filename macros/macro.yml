@@ -15,10 +15,10 @@ macros:
     description: A macro to show conditional logic to limit data when working in dev.
     arguments:
       - name: filter_column_name
-        type: DATE
-        description: The name of the column you want to convert
+        type: string
+        description: The name of the column you want to filter on
       - name: lookback_days
-        type: NUMBER
+        type: integer
         description: Number of lookback days. Defaults to 7.
 
   - name: money
@@ -58,11 +58,7 @@ macros:
         description: name of the column being tested
 
   - name: standard_account_fields
-    description: An example of using a macro to standardize the fiels within the analysis
-    arguments:
-      - name: return_fields
-        type: STRING
-        description: fields you would like returned for analysis
+    description: An example of using a macro to standardize the fields within the analysis
 
   - name: clone_prod_to_target
     description: Macro to clone Data from a variable schema into the target schema, used in CI jobs
