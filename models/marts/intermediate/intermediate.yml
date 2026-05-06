@@ -110,6 +110,77 @@ models:
       - name: lifetime_value
       - name: tier_name
 
+  - name: int_edwards_batch_events
+    description: Production batches joined to product master and quality events. One row per batch–quality event combination; batches with no events produce one row with null event fields.
+    columns:
+      - name: batch_id
+        description: Foreign key to stg_edwards_lifesciences_production_batches.
+      - name: product_id
+        description: Foreign key to stg_edwards_lifesciences_product_master.
+      - name: product_name
+        description: Commercial name of the product.
+      - name: device_family
+        description: Product family grouping within the business unit.
+      - name: business_unit
+        description: Business unit that produced this batch.
+      - name: manufacturing_site_id
+        description: Identifier for the manufacturing facility.
+      - name: production_date
+        description: Date the batch was produced.
+      - name: units_produced
+        description: Total units produced in this batch.
+      - name: units_reworked
+        description: Units requiring rework before acceptance.
+      - name: units_scrapped
+        description: Units discarded due to quality failure.
+      - name: event_id
+        description: Unique identifier for the quality event; null when no event exists for the batch.
+      - name: event_date
+        description: Date the quality event occurred.
+      - name: event_type
+        description: Classification of the quality event.
+      - name: severity
+        description: Severity level of the quality event (CRITICAL, MAJOR, MINOR).
+      - name: detected_at
+        description: Stage in the process where the event was detected.
+      - name: event_region
+        description: Geographic region where the quality event was detected.
+
+  - name: int_edwards_shipments
+    description: Shipments enriched with hospital account and product master attributes for analytics-ready reporting.
+    columns:
+      - name: shipment_id
+        description: Unique identifier for the shipment.
+        data_tests:
+          - unique
+          - not_null
+      - name: shipment_date
+        description: Date the shipment was delivered.
+      - name: units_shipped
+        description: Number of units included in the shipment.
+      - name: shipment_region
+        description: Geographic region of the shipment destination.
+      - name: hospital_id
+        description: Foreign key to stg_edwards_lifesciences_hospital_accounts.
+      - name: hospital_name
+        description: Full name of the hospital.
+      - name: country
+        description: Country where the hospital is located.
+      - name: hospital_region
+        description: Geographic region where the hospital is located.
+      - name: is_teaching_hospital
+        description: Boolean flag indicating whether the hospital is a teaching or academic medical center.
+      - name: primary_specialty
+        description: Primary clinical specialty focus of the hospital.
+      - name: product_id
+        description: Foreign key to stg_edwards_lifesciences_product_master.
+      - name: product_name
+        description: Commercial name of the product.
+      - name: business_unit
+        description: Edwards Lifesciences business unit responsible for the product.
+      - name: device_family
+        description: Product family grouping within the business unit.
+
 unit_tests:
   - name: tiers_are_working
     description: "check if the logic for tiering is working correctly"

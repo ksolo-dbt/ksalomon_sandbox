@@ -1,0 +1,135 @@
+version: 2
+
+models:
+  - name: stg_edwards_lifesciences_product_master
+    description: Cleaned product master data. Strings are trimmed, business_unit is uppercased, and launch_year is cast to integer.
+    columns:
+      - name: product_id
+        description: Unique identifier for the product.
+        data_tests:
+          - unique
+          - not_null
+      - name: product_name
+        description: Full commercial name of the product.
+      - name: business_unit
+        description: Edwards Lifesciences business unit responsible for the product (e.g., TAVR, SURGICAL, CRITICAL CARE).
+      - name: device_family
+        description: Product family grouping within the business unit.
+      - name: udi_root
+        description: Unique Device Identifier (UDI) root, used for FDA tracking and traceability.
+      - name: launch_year
+        description: Year the product was commercially launched.
+
+  - name: stg_edwards_lifesciences_production_batches
+    description: Cleaned production batch records capturing manufacturing output, rework, and scrap quantities per batch.
+    columns:
+      - name: batch_id
+        description: Unique identifier for the production batch.
+        data_tests:
+          - unique
+          - not_null
+      - name: product_id
+        description: Foreign key to stg_edwards_lifesciences_product_master.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_edwards_lifesciences_product_master')
+                field: product_id
+      - name: business_unit
+        description: Business unit that produced this batch.
+      - name: manufacturing_site_id
+        description: Identifier for the manufacturing facility where the batch was produced.
+      - name: production_date
+        description: Date the batch was produced.
+      - name: units_produced
+        description: Total number of units produced in this batch.
+      - name: units_reworked
+        description: Number of units that required rework before being accepted.
+      - name: units_scrapped
+        description: Number of units discarded due to quality failure.
+
+  - name: stg_edwards_lifesciences_quality_events
+    description: Cleaned quality event records tied to production batches, capturing deviations, non-conformances, and other quality incidents.
+    columns:
+      - name: event_id
+        description: Unique identifier for the quality event.
+        data_tests:
+          - unique
+          - not_null
+      - name: batch_id
+        description: Foreign key to stg_edwards_lifesciences_production_batches.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_edwards_lifesciences_production_batches')
+                field: batch_id
+      - name: event_date
+        description: Date the quality event occurred.
+      - name: event_type
+        description: Classification of the quality event (e.g., non-conformance, deviation, CAPA, Field Complaint).
+      - name: severity
+        description: Severity level of the quality event — uppercased (e.g., CRITICAL, MAJOR, MINOR).
+      - name: detected_at
+        description: Stage in the process where the quality event was detected (e.g., in-process, final inspection, field).
+      - name: region
+        description: Geographic region where the quality event was detected — uppercased.
+
+  - name: stg_edwards_lifesciences_hospital_accounts
+    description: Cleaned hospital account reference data for customers that purchase Edwards Lifesciences products.
+    columns:
+      - name: hospital_id
+        description: Unique identifier for the hospital account.
+        data_tests:
+          - unique
+          - not_null
+      - name: hospital_name
+        description: Full name of the hospital.
+      - name: region
+        description: Geographic region where the hospital is located — uppercased.
+      - name: country
+        description: Country where the hospital is located.
+      - name: is_teaching_hospital
+        description: Boolean flag indicating whether the hospital is a teaching or academic medical center.
+      - name: primary_specialty
+        description: Primary clinical specialty focus of the hospital (e.g., cardiovascular, general surgery).
+
+  - name: stg_edwards_lifesciences_shipments
+    description: Cleaned shipment records tracking product deliveries to hospital accounts, linked to production batches for end-to-end traceability.
+    columns:
+      - name: shipment_id
+        description: Unique identifier for the shipment.
+        data_tests:
+          - unique
+          - not_null
+      - name: hospital_id
+        description: Foreign key to stg_edwards_lifesciences_hospital_accounts.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_edwards_lifesciences_hospital_accounts')
+                field: hospital_id
+      - name: product_id
+        description: Foreign key to stg_edwards_lifesciences_product_master.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_edwards_lifesciences_product_master')
+                field: product_id
+      - name: batch_id
+        description: Foreign key to stg_edwards_lifesciences_production_batches, enabling traceability from shipment back to manufacturing batch.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_edwards_lifesciences_production_batches')
+                field: batch_id
+      - name: shipment_date
+        description: Date the shipment was delivered to the hospital.
+      - name: units_shipped
+        description: Number of units included in the shipment.
+      - name: region
+        description: Geographic region of the shipment destination — uppercased.

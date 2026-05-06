@@ -14,6 +14,36 @@ models:
       - name: order_year
         description: year of the order
       
+  - name: agg_edwards_product_quality_summary
+    description: Monthly product-level summary combining manufacturing output, quality events, and shipment volumes. One row per product per month.
+    columns:
+      - name: business_unit
+        description: Edwards Lifesciences business unit (e.g., TAVR, SURGICAL, CRITICAL CARE).
+      - name: device_family
+        description: Product family grouping within the business unit.
+      - name: product_id
+        description: Foreign key to stg_edwards_lifesciences_product_master.
+      - name: product_name
+        description: Commercial name of the product.
+      - name: month
+        description: First day of the production month (date_trunc to month).
+        data_tests:
+          - not_null
+      - name: total_units_produced
+        description: Total units produced across all batches in the month.
+      - name: total_units_reworked
+        description: Total units requiring rework in the month.
+      - name: total_units_scrapped
+        description: Total units scrapped due to quality failure in the month.
+      - name: total_quality_events
+        description: Total number of quality events linked to batches produced in the month.
+      - name: total_field_complaints
+        description: Count of quality events classified as Field Complaint in the month.
+      - name: total_critical_events
+        description: Count of quality events with CRITICAL severity in the month.
+      - name: total_units_shipped
+        description: Total units shipped to hospitals in the month.
+
   - name: monthly_gross_revenue
     columns:
       - name: order_month
