@@ -86,6 +86,7 @@ models:
         +grants:
           select: ['dashboard_user']
       aggregates:
+        +grants: {}
         agg_ship_modes_dynamic_pivot:
           +static_analysis: strict
     
