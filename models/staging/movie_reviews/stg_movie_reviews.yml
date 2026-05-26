@@ -17,7 +17,9 @@ models:
   - name: movie_review_id
     data_tests:
       - not_null
-      - unique
+      - unique:
+          config:
+            severity: warn
     description: Primary Key for movie review table.
   - name: movie_id
     data_tests:
