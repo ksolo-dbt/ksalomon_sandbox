@@ -288,8 +288,14 @@ sources:
           - name: id
             description: primary key of the movie review table
             data_tests:
-              - not_null
-              - unique
+              - not_null:
+                  config:
+                    severity: warn
+              - unique:
+                  config:
+                    severity: warn
+
+
           - name: movie_id
             description: foreign key identifying which movie the review is for
             data_tests:

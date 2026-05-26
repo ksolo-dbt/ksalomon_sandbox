@@ -130,3 +130,13 @@ sources:
           - name: CREATED
             data_type: DATE
             description: The timestamp indicating when the payment was created.
+
+
+models:
+  - name: use_variables
+    description: demo to show variables
+    columns:
+      - name: order_item_key
+        data_tests:
+          - unique
+          - not_null
