@@ -2,6 +2,7 @@ version: 3
 
 groups:
   - name: data_team
+    config: {}
     owner:
       name: Data Team
       email: data@acme.co
