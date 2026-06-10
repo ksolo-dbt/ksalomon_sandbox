@@ -77,6 +77,7 @@ models:
     # Default empty grants map so deferred manifests (dbt Cloud state) serialize grants as {}
     # instead of null — dbt Fusion fails loading defer state when grants is null (dbt1150).
     +grants: {}
+    +static_analysis: strict
     staging:
       +materialized: view
 
@@ -87,17 +88,6 @@ models:
           select: ['dashboard_user']
       aggregates:
         +grants: {}
-        agg_ship_modes_dynamic_pivot:
-          +static_analysis: strict
-    
-    demo_examples:
-      utils:
-        all_days:
-          +static_analysis: strict
-    
-    utils:
-      time_spine_daily:
-        +static_analysis: strict
 seeds:
   kyle_sa_hybrid:
     snowflake_contract_rates:
