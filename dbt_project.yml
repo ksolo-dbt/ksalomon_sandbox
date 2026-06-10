@@ -30,7 +30,6 @@ vars:
   start_date: '1999-01-01'
   test: 'false' # to trigger runs for unit testing - override in a CLI param in testing job
   fct_order_items: 'mock_source__fct_order_items' # this is a map for unit testing
-  vars:
   'dbt_date:time_zone': 'America/Los_Angeles'
 
 
@@ -87,7 +86,7 @@ models:
         +grants:
           select: ['dashboard_user']
       aggregates:
-        +grants: {}
+        +materialized: table
 seeds:
   kyle_sa_hybrid:
     snowflake_contract_rates:
