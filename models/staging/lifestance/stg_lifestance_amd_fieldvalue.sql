@@ -12,7 +12,7 @@ with source as (
 
 ),
 
--- Take the most recent submission when the same field is submitted multiple times
+-- Take the earliest submission when the same field is submitted multiple times
 -- for the same patient + appointment combination
 deduped as (
 
@@ -20,7 +20,7 @@ deduped as (
     from source
     qualify row_number() over (
         partition by patientfid, licensekey, appointmentfid, field_fid
-        order by createdat desc
+        order by createdat
     ) = 1
 
 ),
