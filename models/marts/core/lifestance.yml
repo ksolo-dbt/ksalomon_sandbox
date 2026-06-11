@@ -1,0 +1,447 @@
+version: 3
+
+models:
+  - name: dim_lifestance_patients
+    description: Patient dimension for LifeStance self-service analytics. One row per patient with demographics and diagnosis complexity attributes.
+    config:
+      group: data_team
+      access: public
+    semantic_model:
+      enabled: true
+      name: dim_lifestance_patients
+    columns:
+      - name: patient_key
+        description: Primary patient identifier.
+        data_tests:
+          - unique
+          - not_null
+        entity:
+          type: primary
+          name: patient
+      - name: patient_chartnumber_key
+        description: Alternate patient chart identifier.
+      - name: patient_full_name
+        description: Patient full name for demo readability.
+      - name: patient_age
+        description: Patient age in years.
+      - name: patient_age_band
+        description: Patient age bucket for outcome stratification.
+        dimension:
+          type: categorical
+      - name: patient_gender
+        description: Patient gender.
+        dimension:
+          type: categorical
+      - name: patient_marital_status
+        description: Patient marital status.
+        dimension:
+          type: categorical
+      - name: patient_race
+        description: Patient race.
+        dimension:
+          type: categorical
+      - name: patient_region
+        description: Patient home region.
+        dimension:
+          type: categorical
+      - name: patient_state
+        description: Patient home state.
+        dimension:
+          type: categorical
+      - name: diagnosis_groups
+        description: Comma-separated diagnosis groups observed during the episode.
+      - name: diagnosis_code_count
+        description: Count of distinct diagnosis codes observed during the episode.
+      - name: diagnosis_group_count
+        description: Count of distinct diagnosis groups observed during the episode.
+      - name: diagnosis_complexity_segment
+        description: Diagnosis complexity bucket based on distinct diagnosis group count.
+        dimension:
+          type: categorical
+      - name: has_depression_diagnosis
+        description: Flag indicating at least one depression diagnosis group.
+      - name: has_anxiety_diagnosis
+        description: Flag indicating at least one anxiety diagnosis group.
+      - name: has_ocd_diagnosis
+        description: Flag indicating at least one OCD diagnosis group.
+      - name: has_ptsd_diagnosis
+        description: Flag indicating at least one PTSD diagnosis group.
+      - name: has_adhd_diagnosis
+        description: Flag indicating at least one ADHD diagnosis group.
+      - name: has_bipolar_diagnosis
+        description: Flag indicating at least one bipolar diagnosis group.
+
+  - name: fct_lifestance_visits
+    description: Visit fact table for LifeStance engagement analytics. One row per appointment in the latest episode of care.
+    config:
+      group: data_team
+      access: public
+    semantic_model:
+      enabled: true
+      name: fct_lifestance_visits
+    agg_time_dimension: date_of_service
+    columns:
+      - name: appointment_key
+        description: Primary appointment identifier.
+        data_tests:
+          - unique
+          - not_null
+        entity:
+          type: primary
+          name: appointment
+      - name: patient_key
+        description: Foreign key to dim_lifestance_patients.
+        data_tests:
+          - not_null
+        entity:
+          type: foreign
+          name: patient
+      - name: clinician_key
+        description: Clinician identifier associated with the visit.
+        entity:
+          type: foreign
+          name: clinician
+      - name: date_of_service
+        description: Visit service date.
+        granularity: day
+        dimension:
+          type: time
+      - name: service_month
+        description: Month of service.
+        granularity: month
+        dimension:
+          type: time
+      - name: visit_number
+        description: Visit sequence number in the episode.
+      - name: episode_day_number
+        description: Days from first episode visit to this visit, plus one.
+      - name: discipline
+        description: Visit discipline, such as Psychiatry or Psychotherapy.
+        dimension:
+          type: categorical
+      - name: appointment_type
+        description: Appointment type from the source visit table.
+        dimension:
+          type: categorical
+      - name: visit_modality
+        description: Visit modality, such as In-person or Telehealth.
+        dimension:
+          type: categorical
+      - name: service_region
+        description: Region where the visit was delivered.
+        dimension:
+          type: categorical
+      - name: service_state
+        description: State where the visit was delivered.
+        dimension:
+          type: categorical
+      - name: clinician_type
+        description: Clinician type associated with the visit.
+        dimension:
+          type: categorical
+      - name: expected_discipline
+        description: Expected clinician discipline from the clinician reference table.
+        dimension:
+          type: categorical
+      - name: clinician_status
+        description: Clinician employment or roster status.
+        dimension:
+          type: categorical
+      - name: outcomes_reviewed
+        description: True when an outcome review note is present for the visit.
+        dimension:
+          type: categorical
+      - name: ccp_utilized
+        description: True when a Clinical Care Pathway was utilized or referenced for the visit.
+        dimension:
+          type: categorical
+    metrics:
+      - name: lifestance_visit_count
+        description: Count of LifeStance visits.
+        type: simple
+        label: LifeStance Visit Count
+        agg: sum
+        expr: visit_count
+      - name: lifestance_patients_with_visits
+        description: Count of distinct patients with visits.
+        type: simple
+        label: LifeStance Patients With Visits
+        agg: count_distinct
+        expr: patient_key
+      - name: lifestance_outcomes_reviewed_visits
+        description: Count of visits with outcome review notes.
+        type: simple
+        label: LifeStance Outcomes Reviewed Visits
+        agg: sum
+        expr: outcomes_reviewed_count
+      - name: lifestance_ccp_utilized_visits
+        description: Count of visits where a Clinical Care Pathway was utilized or referenced.
+        type: simple
+        label: LifeStance CCP Utilized Visits
+        agg: sum
+        expr: ccp_utilized_count
+
+  - name: fct_lifestance_outcome_assessments
+    description: Outcome assessment fact table for PHQ-9 and GAD-7 trends. One row per patient, measure type, and measure date.
+    config:
+      group: data_team
+      access: public
+    semantic_model:
+      enabled: true
+      name: fct_lifestance_outcome_assessments
+    agg_time_dimension: measure_date
+    columns:
+      - name: assessment_key
+        description: Surrogate key for a patient, measure type, and measure date.
+        data_tests:
+          - unique
+          - not_null
+        entity:
+          type: primary
+          name: assessment
+      - name: patient_key
+        description: Foreign key to dim_lifestance_patients.
+        data_tests:
+          - not_null
+        entity:
+          type: foreign
+          name: patient
+      - name: appointment_key
+        description: Appointment identifier when the assessment can be associated to a visit.
+        entity:
+          type: foreign
+          name: appointment
+      - name: collection_source
+        description: Source feed for the assessment, such as PHR or portal.
+        dimension:
+          type: categorical
+      - name: measure_type
+        description: Outcome measure type.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['phq9', 'gad7']
+        dimension:
+          type: categorical
+      - name: measure_date
+        description: Date the outcome measure was collected.
+        granularity: day
+        dimension:
+          type: time
+      - name: measure_month
+        description: Month the outcome measure was collected.
+        granularity: month
+        dimension:
+          type: time
+      - name: measure_visit_number
+        description: Visit number assigned to the measure based on episode timing.
+      - name: assessment_sequence_label
+        description: Assessment sequence label, such as Assessment 1 or Assessment 2.
+        dimension:
+          type: categorical
+      - name: score_severity
+        description: Severity bucket for the assessment score.
+        dimension:
+          type: categorical
+      - name: is_second_assessment
+        description: Flag for the second assessment in the patient and measure sequence.
+        dimension:
+          type: categorical
+      - name: is_latest_assessment
+        description: Flag for the latest assessment in the patient and measure sequence.
+        dimension:
+          type: categorical
+    metrics:
+      - name: lifestance_assessment_count
+        description: Count of PHQ-9 and GAD-7 assessments.
+        type: simple
+        label: LifeStance Assessment Count
+        agg: sum
+        expr: assessment_count
+      - name: lifestance_average_assessment_score
+        description: Average assessment score.
+        type: simple
+        label: LifeStance Average Assessment Score
+        agg: average
+        expr: score
+      - name: lifestance_average_score_reduction_from_baseline
+        description: Average score reduction from baseline at each assessment point. Positive values indicate improvement.
+        type: simple
+        label: LifeStance Average Score Reduction From Baseline
+        agg: average
+        expr: score_reduction_from_baseline
+      - name: lifestance_significant_improvement_assessments
+        description: Count of non-baseline assessments meeting the measure-specific significant improvement threshold.
+        type: simple
+        label: LifeStance Significant Improvement Assessments
+        agg: sum
+        expr: significant_improvement_from_baseline
+
+  - name: mart_lifestance_patient_outcomes
+    description: Patient outcome mart at one row per patient and measure type. Designed for self-service questions about improvement, severity, diagnosis complexity, service density, modality, and engagement.
+    config:
+      group: data_team
+      access: public
+    semantic_model:
+      enabled: true
+      name: mart_lifestance_patient_outcomes
+    agg_time_dimension: episode_latest_visit_date
+    columns:
+      - name: patient_outcome_key
+        description: Surrogate key for a patient and measure type outcome row.
+        data_tests:
+          - unique
+          - not_null
+        entity:
+          type: primary
+          name: patient_outcome
+      - name: patient_key
+        description: Foreign key to dim_lifestance_patients.
+        data_tests:
+          - not_null
+        entity:
+          type: foreign
+          name: patient
+      - name: measure_type
+        description: Outcome measure type.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['phq9', 'gad7']
+        dimension:
+          type: categorical
+      - name: episode_first_visit_date
+        description: First visit date in the latest episode of care.
+        granularity: day
+        dimension:
+          type: time
+      - name: episode_latest_visit_date
+        description: Latest visit date in the latest episode of care.
+        granularity: day
+        dimension:
+          type: time
+      - name: patient_age_band
+        description: Patient age bucket.
+        dimension:
+          type: categorical
+      - name: patient_gender
+        description: Patient gender.
+        dimension:
+          type: categorical
+      - name: patient_race
+        description: Patient race.
+        dimension:
+          type: categorical
+      - name: patient_marital_status
+        description: Patient marital status.
+        dimension:
+          type: categorical
+      - name: patient_region
+        description: Patient home region.
+        dimension:
+          type: categorical
+      - name: patient_state
+        description: Patient home state.
+        dimension:
+          type: categorical
+      - name: diagnosis_complexity_segment
+        description: Diagnosis complexity bucket based on diagnosis group count.
+        dimension:
+          type: categorical
+      - name: service_density_bucket
+        description: Service density bucket based on sessions per month.
+        dimension:
+          type: categorical
+      - name: visit_modality_mix
+        description: Patient-level modality mix across episode visits.
+        dimension:
+          type: categorical
+      - name: discipline_mix
+        description: Patient-level mix of psychiatry and psychotherapy visits.
+        dimension:
+          type: categorical
+      - name: baseline_severity
+        description: Baseline severity for the selected measure type.
+        dimension:
+          type: categorical
+      - name: latest_severity
+        description: Latest severity for the selected measure type.
+        dimension:
+          type: categorical
+      - name: baseline_severity_profile
+        description: Combined baseline PHQ-9 and GAD-7 severity profile.
+        dimension:
+          type: categorical
+    metrics:
+      - name: lifestance_patient_outcome_rows
+        description: Count of patient outcome rows.
+        type: simple
+        label: LifeStance Patient Outcome Rows
+        agg: sum
+        expr: patient_outcome_count
+      - name: lifestance_patient_count
+        description: Count of distinct patients in outcome mart rows.
+        type: simple
+        label: LifeStance Patient Count
+        agg: count_distinct
+        expr: patient_key
+      - name: lifestance_average_score_reduction
+        description: Average reduction from baseline score to latest score. Positive values indicate improvement.
+        type: simple
+        label: LifeStance Average Score Reduction
+        agg: average
+        expr: score_reduction
+      - name: lifestance_average_score_reduction_percent
+        description: Average percentage reduction from baseline score to latest score. Positive values indicate improvement.
+        type: simple
+        label: LifeStance Average Score Reduction Percent
+        agg: average
+        expr: score_reduction_percent
+      - name: lifestance_significant_improvement_patients
+        description: Count of patient outcome rows that achieved measure-specific significant improvement.
+        type: simple
+        label: LifeStance Significant Improvement Patients
+        agg: sum
+        expr: achieved_significant_improvement
+      - name: lifestance_significant_improvement_rate
+        description: Share of patient outcome rows that achieved measure-specific significant improvement.
+        type: ratio
+        label: LifeStance Significant Improvement Rate
+        numerator: lifestance_significant_improvement_patients
+        denominator: lifestance_patient_outcome_rows
+      - name: lifestance_early_significant_improvement_patients
+        description: Count of patient outcome rows with significant improvement by the second assessment.
+        type: simple
+        label: LifeStance Early Significant Improvement Patients
+        agg: sum
+        expr: achieved_early_significant_improvement
+      - name: lifestance_early_significant_improvement_rate
+        description: Share of patient outcome rows with significant improvement by the second assessment.
+        type: ratio
+        label: LifeStance Early Significant Improvement Rate
+        numerator: lifestance_early_significant_improvement_patients
+        denominator: lifestance_patient_outcome_rows
+      - name: lifestance_average_sessions_per_month
+        description: Average visit density during the episode.
+        type: simple
+        label: LifeStance Average Sessions Per Month
+        agg: average
+        expr: sessions_per_month
+      - name: lifestance_average_total_visits
+        description: Average total visits during the episode.
+        type: simple
+        label: LifeStance Average Total Visits
+        agg: average
+        expr: total_visits
+      - name: lifestance_average_episode_days
+        description: Average number of days between the first and latest episode visit.
+        type: simple
+        label: LifeStance Average Episode Days
+        agg: average
+        expr: episode_days
+      - name: lifestance_average_diagnosis_group_count
+        description: Average number of diagnosis groups observed during the episode.
+        type: simple
+        label: LifeStance Average Diagnosis Group Count
+        agg: average
+        expr: diagnosis_group_count

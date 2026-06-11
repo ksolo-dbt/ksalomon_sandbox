@@ -267,7 +267,7 @@ sources:
       - name: cqo_phq9_gad7_patient_level
         description: |
           Patient-level aggregate outcomes for PHQ-9 (depression) and GAD-7 (anxiety) assessments across the last episode of care. One row per patient.
-          This table is the patient-level rollup provided as a validation reference. The production reporting target is visit-level (one row per episode-of-care visit with patient metrics repeated), which feeds Power BI reporting.
+          This table is the patient-level rollup provided as the answer key validation reference. The production reporting target is visit-level (one row per episode-of-care visit with patient metrics repeated), which feeds Power BI reporting.
 
           Clinical definitions applied:
           - Baseline: first measure linked to the first visit in the last episode of care
