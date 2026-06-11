@@ -172,7 +172,8 @@ models:
       Transforms raw EAV rows into one row per patient × appointment with PHQ-9 and GAD-7 scores/dates pivoted into columns.
 
       Transformation logic:
-      - Deduplicates repeat submissions for the same patient/appointment/field by keeping the most recent (max createdat).
+      - Deduplicates repeat submissions for the same patient/submission/field by keeping the most recent (max createdat).
+      - Uses createdat as the submission grain when appointment_fid is null so separate portal submissions are preserved.
       - Pivots field_fid 1001/1002/1003/1004 into phq9_score, phq9_date, gad7_score, gad7_date.
       - Extracts numeric scores from potentially messy raw strings using regex cleanup before casting.
     columns:
@@ -204,7 +205,7 @@ models:
       Note: appointment_fid may be null for Patient Portal submissions.
 
       Transformation logic:
-      - Deduplicates repeat submissions for the same patient/appointment/field by keeping the most recent (max createdat).
+      - Deduplicates repeat submissions for the same patient/appointment/field by keeping the earliest createdat.
       - Pivots field_fid 1001/1002/1003/1004 into phq9_score, phq9_date, gad7_score, gad7_date.
       - Extracts numeric scores from potentially messy raw strings using regex cleanup before casting.
     columns:

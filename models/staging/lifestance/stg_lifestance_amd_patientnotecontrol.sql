@@ -7,19 +7,21 @@ with source as (
         "FieldFID"      as field_fid,
         "value"         as value,
         "createdby"     as createdby,
-        "createdat"     as createdat
+        "createdat"     as createdat,
+        coalesce(trim("appointmentfid"), to_varchar("createdat")) as submission_key
     from {{ source('lifestance_raw', 'amd_patientnotecontrol_phq9_gad7_outcomes') }}
 
 ),
 
 -- Take the most recent submission when the same field is submitted multiple times.
--- appointmentfid may be null for Patient Portal submissions; nulls are grouped together.
+-- appointmentfid may be null for Patient Portal submissions, so createdat becomes
+-- the submission grain for null-appointment records.
 deduped as (
 
     select *
     from source
     qualify row_number() over (
-        partition by patientfid, licensekey, appointmentfid, field_fid
+        partition by patientfid, licensekey, submission_key, field_fid
         order by createdat desc
     ) = 1
 
@@ -42,7 +44,7 @@ final as (
         try_to_date(max(case when field_fid = 1004 then value end))     as gad7_date,
         min(createdat)                                                  as first_submitted_at
     from deduped
-    group by 1, 2, 3
+    group by 1, 2, 3, submission_key
 
 )
 

@@ -44,6 +44,47 @@ models:
       - name: total_units_shipped
         description: Total units shipped to hospitals in the month.
 
+  - name: cqo_phq9_gad7_patient_level
+    description: |
+      Patient-level Clinical Quality & Outcomes rollup for the LifeStance PHQ-9 and GAD-7 demo.
+      Reproduces the provided validation answer key from the nine staged LifeStance sources.
+    columns:
+      - name: patient_key
+        description: Unique patient identifier.
+        data_tests:
+          - unique
+          - not_null
+      - name: patient_chartnumber_pkey
+        description: Patient chart number from the LifeStance source file.
+      - name: patient_fullname
+        description: Patient full name for demo readability.
+      - name: last_episode_total_visits
+        description: Count of visits in the patient's latest episode of care.
+      - name: phq9_total_measures
+        description: Count of PHQ-9 measures included in the latest episode window.
+      - name: phq9_first_measure
+        description: Baseline PHQ-9 score.
+      - name: phq9_last_measure
+        description: Final PHQ-9 score in the episode window.
+      - name: phq9_qualified_patient
+        description: Flag for PHQ-9 baseline >= 5 on visit 1 with at least two measures on different dates.
+      - name: gad7_total_measures
+        description: Count of GAD-7 measures included in the latest episode window.
+      - name: gad7_first_measure
+        description: Baseline GAD-7 score.
+      - name: gad7_last_measure
+        description: Final GAD-7 score in the episode window.
+      - name: gad7_qualified_patient
+        description: Flag for GAD-7 baseline >= 5 on visit 1 with at least two measures on different dates.
+      - name: blended_first_score_interpretation
+        description: Severity grouping based on the greater first PHQ-9 or GAD-7 score.
+      - name: dx_codes
+        description: Comma-separated diagnosis codes observed across the patient's episode visits.
+      - name: ccp_utilized
+        description: True when any CCP note indicates a Clinical Care Pathway was utilized.
+      - name: outcomes_reviewed
+        description: True when any outcome-review note indicates outcomes were reviewed.
+
   - name: monthly_gross_revenue
     columns:
       - name: order_month

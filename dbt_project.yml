@@ -41,6 +41,7 @@ dbt-cloud:
   # Kyle SA Hybrid Project
   account-host: "cloud.getdbt.com"
   project-id: "469416"
+  defer-env-id: "404851" # Production
 
   # # SA Demo Account (North America) - Data Analytics
   # account-host: "cloud.getdbt.com"
