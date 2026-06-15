@@ -44,7 +44,7 @@ episode_summary as (
 
     select
         patient_key,
-        min(patient_chartnumber_key)        as patient_chartnumber_key,
+        max(patient_chartnumber_key)        as patient_chartnumber_key,
         min(date_of_service)                as last_episode_first_visit,
         max(date_of_service)                as last_episode_latest_visit,
         count(distinct appointment_key)     as last_episode_total_visits
