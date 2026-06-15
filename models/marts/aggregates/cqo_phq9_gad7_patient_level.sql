@@ -1,4 +1,3 @@
---Comment to show changes
 {{
     config(
         materialized = 'table'
