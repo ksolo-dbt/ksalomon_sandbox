@@ -32,13 +32,9 @@ vars:
   fct_order_items: 'mock_source__fct_order_items' # this is a map for unit testing
   'dbt_date:time_zone': 'America/Los_Angeles'
 
-
-flags:
-  enable_iceberg_materializations: true
 dbt-cloud:
-  # Project details sourced from https://www.notion.so/dbtlabs/SA-Demo-Assets-fa6e16d0a9de4c07ba7511165958eea5?pvs=4#647e3924ef57460f9ab2b0eb3479c153
 
-  # Kyle SA Hybrid Project
+
   account-host: "cloud.getdbt.com"
   project-id: "469416"
   defer-env-id: "404851" # Production
