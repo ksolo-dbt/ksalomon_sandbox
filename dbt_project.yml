@@ -1,7 +1,7 @@
 # Name your project! Project names should contain only lowercase characters
 # and underscores. A good project name should reflect your organization's
 # name or the intended use of these models
-name: kyle_sa_hybrid
+name: ksalomon_sandbox
 version: '1.0.0'
 config-version: 2
 
@@ -73,7 +73,7 @@ dbt-cloud:
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
 
 models:
-  kyle_sa_hybrid:
+  ksalomon_sandbox:
     # Default empty grants map so deferred manifests (dbt Cloud state) serialize grants as {}
     # instead of null — dbt Fusion fails loading defer state when grants is null (dbt1150).
     +grants: {}
@@ -89,7 +89,7 @@ models:
       aggregates:
         +materialized: table
 seeds:
-  kyle_sa_hybrid:
+  ksalomon_sandbox:
     snowflake_contract_rates:
       +column_types:
         effective_date: DATE
