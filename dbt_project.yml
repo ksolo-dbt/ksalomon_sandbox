@@ -6,72 +6,23 @@ version: '1.0.0'
 config-version: 2
 
 # This setting configures which "profile" dbt uses for this project.
-profile: 'kyle_sa_hybrid'
+profile: 'ksalomon_sandbox'
 # These configurations specify where dbt should look for different types of files.
 # The `source-paths` config, for example, states that models in this project can be
 # found in the "models/" directory. You probably won't need to change these!
 model-paths: ["models"]
-analysis-paths: ["analyses"]
 test-paths: ["tests"]
-seed-paths: ["seeds"]
 macro-paths: ["macros"]
-snapshot-paths: ["snapshots"]
 clean-targets:         # directories to be removed by `dbt clean`
   - "target"
-  - "dbt_modules"
   - "dbt_packages"
-
-on-run-start:
-  # - '{{create_udfs()}}' # comment / uncomment this line to build UDFs called in the create_udfs macro
-
-on-run-end:
-
-vars:
-  start_date: '1999-01-01'
-  test: 'false' # to trigger runs for unit testing - override in a CLI param in testing job
-  fct_order_items: 'mock_source__fct_order_items' # this is a map for unit testing
-  'dbt_date:time_zone': 'America/Los_Angeles'
-
-dbt-cloud:
-
-
-  account-host: "cloud.getdbt.com"
-  project-id: "469416"
-  defer-env-id: "404851" # Production
-
-  # # SA Demo Account (North America) - Data Analytics
-  # account-host: "cloud.getdbt.com"
-  # project-id: "206289"
-
-  # # SA Demo Account (EMEA) - Data Analytics
-  # account-host: "emea.dbt.com"
-  # project-id: "921"
-  # defer-env-id: "2057" # Production
-
-  # # SA Demo Account (APAC) - Data Analytics
-  # account-host: "au.dbt.com"
-  # project-id: "51"
-
-  # # SA Demo Sandbox (North America) - Data Analytics
-  # account-host: "cloud.getdbt.com"
-  # project-id: "291446"
-
-  # # SA Demo Sandbox (EMEA) - Data Analytics
-  # account-host: "emea.dbt.com"
-  # project-id: "1429"
-  # defer-env-id: "2269" # Production
-
-  # # SA Demo Sandbox (APAC) - Data Analytics
-  # account-host: "au.dbt.com"
-  # project-id: "4081"
 
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
 
 models:
   ksalomon_sandbox:
-    # Default empty grants map so deferred manifests (dbt Cloud state) serialize grants as {}
-    # instead of null — dbt Fusion fails loading defer state when grants is null (dbt1150).
+    # Keep grants serialized as an empty map instead of null so Fusion can load defer manifests.
     +grants: {}
     +static_analysis: strict
     staging:
@@ -80,16 +31,5 @@ models:
     marts:
       core:
         +materialized: table
-        +grants:
-          select: ['dashboard_user']
       aggregates:
         +materialized: table
-seeds:
-  ksalomon_sandbox:
-    snowflake_contract_rates:
-      +column_types:
-        effective_date: DATE
-        rate: NUMBER
-
-snapshots:
-  +target_schema: snapshots_dev

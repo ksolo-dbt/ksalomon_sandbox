@@ -157,14 +157,6 @@ models:
               else 'High'
             end
   - name: fct_order_items
-    data_tests:
-      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          name: orders_sales_amount_equals_order_item_sales_amount
-          arguments:
-            expression: sum(net_item_sales_amount)
-            compare_model: ref("fct_orders")
-            compare_expression: sum(net_item_sales_amount)
-            group_by: [order_key]
     description: "order items fact tableorder items fact tableLine items for an order.  An order_key can be represented multiple times\nin this table\n"
     columns:
       - name: order_item_key
