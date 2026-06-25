@@ -36,7 +36,6 @@ renamed as (
             when 'P' then 'returned'
             when 'F' then 'billed'
             when 'O' then 'shipped'
-            else null
         end as status_code,
         
         l_shipdate as ship_date,
