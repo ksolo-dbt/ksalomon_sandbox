@@ -2,12 +2,15 @@
 [sqlfluff]
 dialect = snowflake
 templater = dbt
-exclude_rules = RF04, ST06
 # This change (from jinja to dbt templater) will make linting slower
 # because linting will first compile dbt code into data warehouse code.
 runaway_limit = 10
 max_line_length = 80
 indent_unit = space
+
+[sqlfluff:templater:jinja]
+apply_dbt_builtins = True
+load_macros_from_path = macros, dbt_packages/dbt_utils/macros
 
 [sqlfluff:indentation]
 # See https://docs.sqlfluff.com/en/stable/layout.html#configuring-indent-locations

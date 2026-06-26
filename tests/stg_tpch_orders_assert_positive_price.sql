@@ -8,6 +8,8 @@
 
 with orders as (select * from {{ ref('stg_tpch_orders') }})
 
-select *
+select
+    orders.order_key,
+    orders.total_price
 from orders
-where total_price < 0
+where orders.total_price < 0

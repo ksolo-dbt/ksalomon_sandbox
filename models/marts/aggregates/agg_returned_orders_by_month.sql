@@ -4,15 +4,9 @@ with fct_order_items as (
 
 final as (
     select
-        date_trunc(month, fct_order_items.order_date) as order_month,
-        count(
-            case
-                when fct_order_items.is_return
-                    then fct_order_items.order_item_key
-            end
-        )
-            as returned_orders,
-        1.0 * returned_orders / nullif(
+        date_trunc('month', fct_order_items.order_date) as order_month,
+        count_if(fct_order_items.is_return) as returned_orders,
+        1.0 * count_if(fct_order_items.is_return) / nullif(
             count(fct_order_items.order_item_key),
             0
         ) as return_rate,

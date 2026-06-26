@@ -27,10 +27,7 @@ renamed as (
             else 'unknown'
         end as return_flag,
 
-        case
-            when return_flag = 'accepted' then false
-            else true
-        end as is_return,
+        return_flag != 'accepted' as is_return,
 
         case l_linestatus
             when 'P' then 'returned'
@@ -43,7 +40,7 @@ renamed as (
         l_receiptdate as receipt_date,
         l_shipinstruct as ship_instructions,
         l_shipmode as ship_mode,
-        l_comment as comment
+        l_comment as comment -- noqa: RF04
 
     from source
 

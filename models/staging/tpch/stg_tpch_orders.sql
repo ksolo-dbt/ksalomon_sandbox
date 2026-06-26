@@ -17,7 +17,7 @@ rename as (
         o_orderpriority as priority_code,
         o_clerk as clerk_name,
         o_shippriority as ship_priority,
-        o_comment as comment
+        o_comment as comment -- noqa: RF04
 
     from source
 
