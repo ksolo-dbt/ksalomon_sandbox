@@ -1,6 +1,8 @@
 # This file is based off the example provided in our docs: https://docs.getdbt.com/docs/cloud/dbt-cloud-ide/lint-format#customize-linting
 [sqlfluff]
+dialect = snowflake
 templater = dbt
+exclude_rules = RF04, ST06
 # This change (from jinja to dbt templater) will make linting slower
 # because linting will first compile dbt code into data warehouse code.
 runaway_limit = 10

@@ -66,8 +66,8 @@ final as (
         order_item_summary.item_tax_amount,
         order_item_summary.net_item_sales_amount
     from orders
-    inner join order_item_summary
-        on orders.order_key = order_item_summary.order_key
+        inner join order_item_summary
+            on orders.order_key = order_item_summary.order_key
 
 )
 

@@ -8,12 +8,12 @@
 
 with part as (
 
-    select * from {{ref('stg_tpch_parts')}}
+    select * from {{ ref('stg_tpch_parts') }}
 
 ),
 
 final as (
-    select 
+    select
         part_key,
         manufacturer,
         name,
@@ -25,6 +25,7 @@ final as (
     from
         part
 )
+
 select *
-from final  
-order by part_key
+from final
+order by 1

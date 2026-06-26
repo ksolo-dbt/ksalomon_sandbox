@@ -7,11 +7,11 @@ with source as (
 renamed as (
 
     select
-    
+
         {{ dbt_utils.generate_surrogate_key(
             ['l_orderkey', 
             'l_linenumber']) }}
-                as order_item_key,
+            as order_item_key,
         l_orderkey as order_key,
         l_partkey as part_key,
         l_suppkey as supplier_key,
@@ -20,24 +20,24 @@ renamed as (
         l_extendedprice as extended_price,
         l_discount as discount_percentage,
         l_tax as tax_rate,
-        
-        case 
+
+        case
             when l_returnflag in ('R') then 'returned'
             when l_returnflag in ('A') then 'accepted'
             else 'unknown'
-        end as return_flag, 
+        end as return_flag,
 
-        case 
+        case
             when return_flag = 'accepted' then false
             else true
         end as is_return,
 
-        case l_linestatus 
+        case l_linestatus
             when 'P' then 'returned'
             when 'F' then 'billed'
             when 'O' then 'shipped'
         end as status_code,
-        
+
         l_shipdate as ship_date,
         l_commitdate as commit_date,
         l_receiptdate as receipt_date,
