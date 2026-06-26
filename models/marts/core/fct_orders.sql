@@ -49,7 +49,7 @@ order_item_summary as (
 
 final as (
 
-    select
+    select -- noqa: ST06
         orders.order_key,
         orders.order_date,
         orders.order_time,

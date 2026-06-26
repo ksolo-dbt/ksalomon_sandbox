@@ -20,14 +20,17 @@ with agg_returned_orders_by_month as (
 
 select
     returned_orders_by_month.order_month,
+<<<<<<< HEAD
     returned_orders_by_month.returned_orders,
     returned_orders_by_month.return_rate,
     returned_orders_by_month.row_count
+=======
+    returned_orders_by_month.return_rate
+>>>>>>> 37ea214fd0627a5514367bb2b2f666b3f9e77135
 from agg_returned_orders_by_month as returned_orders_by_month
 where
     returned_orders_by_month.order_month = (
-        select
-            max(latest_month.order_month) as max_order_month
+        select max(latest_month.order_month) as max_order_month
         from agg_returned_orders_by_month as latest_month
     )
     and returned_orders_by_month.return_rate > 0.50

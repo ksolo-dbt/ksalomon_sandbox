@@ -28,7 +28,11 @@ renamed as (
             else 'unknown'
         end as return_flag,
 
+<<<<<<< HEAD
         coalesce(l_returnflag = 'R', false) as is_returned,
+=======
+        return_flag != 'accepted' as is_return,
+>>>>>>> 37ea214fd0627a5514367bb2b2f666b3f9e77135
 
         case l_linestatus
             when 'P' then 'returned'
@@ -41,7 +45,7 @@ renamed as (
         l_receiptdate as receipt_date,
         l_shipinstruct as ship_instructions,
         l_shipmode as ship_mode,
-        l_comment as comment
+        l_comment as comment -- noqa: RF04
 
     from source
 

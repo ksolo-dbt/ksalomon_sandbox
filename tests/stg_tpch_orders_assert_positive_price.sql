@@ -14,7 +14,12 @@ with orders as (
 )
 
 select
+<<<<<<< HEAD
     order_key,
     total_price
+=======
+    orders.order_key,
+    orders.total_price
+>>>>>>> 37ea214fd0627a5514367bb2b2f666b3f9e77135
 from orders
-where total_price < 0
+where orders.total_price < 0
