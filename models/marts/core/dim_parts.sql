@@ -26,6 +26,14 @@ final as (
         part
 )
 
-select *
+select
+    part_key,
+    manufacturer,
+    name,
+    brand,
+    type,
+    size,
+    container,
+    retail_price
 from final
 order by 1

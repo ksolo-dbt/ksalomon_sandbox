@@ -6,8 +6,15 @@
     )
 }}
 
-with orders as (select * from {{ ref('stg_tpch_orders') }})
+with orders as (
+    select
+        order_key,
+        total_price
+    from {{ ref('stg_tpch_orders') }}
+)
 
-select *
+select
+    order_key,
+    total_price
 from orders
 where total_price < 0

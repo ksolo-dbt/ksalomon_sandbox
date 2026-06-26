@@ -10,10 +10,19 @@
 }}
 
 with agg_returned_orders_by_month as (
-    select * from {{ ref('agg_returned_orders_by_month') }}
+    select
+        order_month,
+        returned_orders,
+        return_rate,
+        row_count
+    from {{ ref('agg_returned_orders_by_month') }}
 )
 
-select *
+select
+    returned_orders_by_month.order_month,
+    returned_orders_by_month.returned_orders,
+    returned_orders_by_month.return_rate,
+    returned_orders_by_month.row_count
 from agg_returned_orders_by_month as returned_orders_by_month
 where
     returned_orders_by_month.order_month = (

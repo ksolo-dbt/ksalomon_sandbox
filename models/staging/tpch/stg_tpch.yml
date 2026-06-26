@@ -55,9 +55,11 @@ models:
               config:
                 severity: warn
               arguments:
-                values: ['returned', 'accepted']
-      - name: is_return
-        description: '{{ doc("is_return") }}'
+                values: ['returned', 'accepted', 'not_returned', 'unknown']
+      - name: is_returned
+        description: '{{ doc("is_returned") }}'
+
+
       - name: status_code
         description: status code of the order item
         data_tests:
@@ -178,6 +180,7 @@ models:
     columns:
       - name: supplier_key
         description: primary key of the model
+
         data_tests:
           - unique
           - not_null

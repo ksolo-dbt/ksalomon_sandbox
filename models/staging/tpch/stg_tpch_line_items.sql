@@ -22,15 +22,13 @@ renamed as (
         l_tax as tax_rate,
 
         case
-            when l_returnflag in ('R') then 'returned'
-            when l_returnflag in ('A') then 'accepted'
+            when l_returnflag = 'R' then 'returned'
+            when l_returnflag = 'A' then 'accepted'
+            when l_returnflag = 'N' then 'not_returned'
             else 'unknown'
         end as return_flag,
 
-        case
-            when return_flag = 'accepted' then false
-            else true
-        end as is_return,
+        coalesce(l_returnflag = 'R', false) as is_returned,
 
         case l_linestatus
             when 'P' then 'returned'
@@ -49,4 +47,23 @@ renamed as (
 
 )
 
-select * from renamed
+select
+    order_item_key,
+    order_key,
+    part_key,
+    supplier_key,
+    line_number,
+    quantity,
+    extended_price,
+    discount_percentage,
+    tax_rate,
+    return_flag,
+    is_returned,
+    status_code,
+    ship_date,
+    commit_date,
+    receipt_date,
+    ship_instructions,
+    ship_mode,
+    comment
+from renamed

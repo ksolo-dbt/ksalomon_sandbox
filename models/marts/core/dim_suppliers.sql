@@ -39,4 +39,12 @@ final as (
             on nation.region_key = region.region_key
 )
 
-select * from final
+select
+    supplier_key,
+    supplier_name,
+    supplier_address,
+    nation,
+    region,
+    phone_number,
+    account_balance
+from final

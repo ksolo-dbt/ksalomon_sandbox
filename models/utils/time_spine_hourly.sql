@@ -21,4 +21,4 @@ final as (
     from hours
 )
 
-select * from final
+select date_hour from final

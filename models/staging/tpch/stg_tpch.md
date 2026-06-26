@@ -7,9 +7,9 @@
 
 {% docs line_number %} sequence of the order items within the order {% enddocs %}
 
-{% docs return_flag %} letter determining the status of the return (r is returned; a is accepted) {% enddocs %}
+{% docs return_flag %} normalized return status derived from the raw return flag (returned, accepted, not_returned, unknown) {% enddocs %}
 
-{% docs is_return %} indicates a returned order (true / false) {% enddocs %}
+{% docs is_returned %} indicates whether the order item was returned {% enddocs %}
 
 {% docs ship_date %} the date the order item is being shipped {% enddocs %}
 

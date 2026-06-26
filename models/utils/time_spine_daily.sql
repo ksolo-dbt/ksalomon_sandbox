@@ -21,4 +21,4 @@ final as (
     from days
 )
 
-select * from final
+select date_day from final

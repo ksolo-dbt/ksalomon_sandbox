@@ -18,7 +18,7 @@ select
     line_item.supplier_key,
     orders.order_date,
     orders.status_code as order_status_code,
-    line_item.is_return,
+    line_item.is_returned,
     line_item.line_number,
     line_item.status_code as order_item_status_code,
     line_item.ship_date,

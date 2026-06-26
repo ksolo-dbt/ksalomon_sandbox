@@ -24,7 +24,7 @@ order_items as (
 
     select
         order_key,
-        is_return,
+        is_returned,
         gross_item_sales_amount,
         item_discount_amount,
         item_tax_amount,
@@ -41,7 +41,7 @@ order_item_summary as (
         sum(item_discount_amount) as item_discount_amount,
         sum(item_tax_amount) as item_tax_amount,
         sum(net_item_sales_amount) as net_item_sales_amount,
-        count_if(is_return = true) as return_count
+        count_if(is_returned = true) as return_count
     from order_items
     group by 1
 

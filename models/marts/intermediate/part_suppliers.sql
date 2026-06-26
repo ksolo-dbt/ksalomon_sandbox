@@ -50,4 +50,22 @@ final as (
         2
 )
 
-select * from final
+select
+    part_supplier_key,
+    part_key,
+    part_name,
+    manufacturer,
+    brand,
+    part_type,
+    part_size,
+    container,
+    retail_price,
+    supplier_key,
+    supplier_name,
+    supplier_address,
+    phone_number,
+    account_balance,
+    nation_key,
+    available_quantity,
+    cost
+from final

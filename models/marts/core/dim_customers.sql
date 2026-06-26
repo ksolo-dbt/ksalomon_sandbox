@@ -54,7 +54,19 @@ final as (
             on customer.customer_key = customer_flags.customer_key
 )
 
-select *
+select
+    customer_key,
+    name,
+    address,
+    nation,
+    region,
+    phone_number,
+    account_balance,
+    market_segment,
+    lifetime_value,
+    is_high_value,
+    is_mid_value,
+    is_low_value
 from
     final
 order by

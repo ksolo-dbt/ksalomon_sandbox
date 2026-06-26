@@ -28,4 +28,8 @@ final as (
     group by 1
 )
 
-select * from final
+select
+    customer_key,
+    lifetime_value,
+    tier_name
+from final

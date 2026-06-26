@@ -17,4 +17,9 @@ renamed as (
 
 )
 
-select * from renamed
+select
+    nation_key,
+    name,
+    region_key,
+    comment
+from renamed

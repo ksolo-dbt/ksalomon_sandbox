@@ -26,7 +26,7 @@ final as (
         order_item.part_key,
         order_item.supplier_key,
         order_item.order_item_status_code,
-        order_item.is_return,
+        order_item.is_returned,
         order_item.line_number,
         order_item.ship_date,
         order_item.commit_date,
@@ -56,7 +56,33 @@ final as (
 
 )
 
-select *
+select
+    order_item_key,
+    order_key,
+    order_date,
+    customer_key,
+    part_key,
+    supplier_key,
+    order_item_status_code,
+    is_returned,
+    line_number,
+    ship_date,
+    commit_date,
+    receipt_date,
+    ship_mode,
+    supplier_cost,
+    base_price,
+    discount_percentage,
+    discounted_price,
+    tax_rate,
+    nation_key,
+    order_item_count,
+    quantity,
+    gross_item_sales_amount,
+    discounted_item_sales_amount,
+    item_discount_amount,
+    item_tax_amount,
+    net_item_sales_amount
 from
     final
 order by

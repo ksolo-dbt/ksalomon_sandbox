@@ -23,4 +23,15 @@ rename as (
 
 )
 
-select * from rename
+select
+    order_key,
+    customer_key,
+    status_code,
+    total_price,
+    order_date,
+    order_time,
+    priority_code,
+    clerk_name,
+    ship_priority,
+    comment
+from rename

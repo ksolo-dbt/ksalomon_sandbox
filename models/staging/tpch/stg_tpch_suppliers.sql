@@ -20,4 +20,12 @@ renamed as (
 
 )
 
-select * from renamed
+select
+    supplier_key,
+    supplier_name,
+    supplier_address,
+    nation_key,
+    phone_number,
+    account_balance,
+    comment
+from renamed

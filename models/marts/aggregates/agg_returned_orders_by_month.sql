@@ -7,7 +7,7 @@ final as (
         date_trunc(month, fct_order_items.order_date) as order_month,
         count(
             case
-                when fct_order_items.is_return
+                when fct_order_items.is_returned
                     then fct_order_items.order_item_key
             end
         )
@@ -22,4 +22,9 @@ final as (
     order by 1 desc
 )
 
-select * from final
+select
+    order_month,
+    returned_orders,
+    return_rate,
+    row_count
+from final

@@ -33,4 +33,10 @@ final as (
     group by 1
 )
 
-select * from final
+select
+    customer_key,
+    lifetime_value,
+    is_high_value,
+    is_mid_value,
+    is_low_value
+from final

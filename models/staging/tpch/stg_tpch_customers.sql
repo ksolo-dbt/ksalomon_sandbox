@@ -21,4 +21,13 @@ final as (
 
 )
 
-select * from final
+select
+    customer_key,
+    name,
+    address,
+    nation_key,
+    phone_number,
+    account_balance,
+    market_segment,
+    comment
+from final

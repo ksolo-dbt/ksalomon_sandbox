@@ -11,7 +11,15 @@ with merged as (
     from {{ ref('fct_order_items') }}
 )
 
-select *
+select
+    order_year,
+    "'AIR'" as air,
+    "'REG AIR'" as reg_air,
+    "'FOB'" as fob,
+    "'RAIL'" as rail,
+    "'MAIL'" as mail,
+    "'SHIP'" as ship,
+    "'TRUCK'" as truck
 from
     merged
     -- have to manually map strings in the pivot operation

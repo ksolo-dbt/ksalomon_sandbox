@@ -22,4 +22,11 @@ renamed as (
 
 )
 
-select * from renamed
+select
+    part_supplier_key,
+    part_key,
+    supplier_key,
+    available_quantity,
+    cost,
+    comment
+from renamed

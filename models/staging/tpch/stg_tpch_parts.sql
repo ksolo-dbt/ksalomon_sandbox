@@ -22,4 +22,14 @@ renamed as (
 
 )
 
-select * from renamed
+select
+    part_key,
+    name,
+    manufacturer,
+    brand,
+    type,
+    size,
+    container,
+    retail_price,
+    comment
+from renamed
