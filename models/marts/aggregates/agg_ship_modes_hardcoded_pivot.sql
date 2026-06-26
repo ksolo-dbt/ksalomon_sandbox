@@ -4,7 +4,7 @@ that are in the system
 */
 
 with merged as (
-    select
+    select -- noqa: ST06
         date_part('year', order_date) as order_year,
         ship_mode,
         gross_item_sales_amount

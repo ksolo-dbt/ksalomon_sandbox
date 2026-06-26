@@ -3,3 +3,5 @@ dbt_packages/
 dbt_internal_packages/
 logs/
 snapshots/
+models/utils/time_spine_daily.sql
+models/utils/time_spine_hourly.sql
