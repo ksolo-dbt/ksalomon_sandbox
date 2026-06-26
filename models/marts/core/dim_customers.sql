@@ -10,21 +10,24 @@ with customer as (
     select * from {{ ref('stg_tpch_customers') }}
 
 ),
+
 nation as (
 
     select * from {{ ref('stg_tpch_nations') }}
 ),
+
 region as (
 
     select * from {{ ref('stg_tpch_regions') }}
 
 ),
+
 customer_flags as (
     select * from {{ ref('customer_flags') }}
 ),
 
 final as (
-    select 
+    select
         customer.customer_key,
         customer.name,
         customer.address,
@@ -40,7 +43,7 @@ final as (
         customer_flags.lifetime_value,
         customer_flags.is_high_value,
         customer_flags.is_mid_value,
-        customer_flags.is_low_value,
+        customer_flags.is_low_value
     from
         customer
         inner join nation
@@ -50,9 +53,9 @@ final as (
         left join customer_flags
             on customer.customer_key = customer_flags.customer_key
 )
-select 
-    *
+
+select *
 from
     final
 order by
-    customer_key
+    1

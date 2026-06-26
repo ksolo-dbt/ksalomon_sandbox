@@ -1,4 +1,7 @@
-/* Create a pivot table with hard-coded columns based on a query of the ship modes that are in the system */
+/*
+Create a pivot table with hard-coded columns based on a query of the ship modes
+that are in the system
+*/
 
 with merged as (
     select
@@ -8,12 +11,11 @@ with merged as (
     from {{ ref('fct_order_items') }}
 )
 
-select
-    * 
+select *
 from
     merged
     -- have to manually map strings in the pivot operation
-    pivot(sum(gross_item_sales_amount) for ship_mode in (
+    pivot (sum(gross_item_sales_amount) for ship_mode in (
         'AIR',
         'REG AIR',
         'FOB',
@@ -21,6 +23,6 @@ from
         'MAIL',
         'SHIP',
         'TRUCK'
-    )) as p 
+    )) as p
 
-order by order_year
+order by 1

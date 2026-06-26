@@ -1,6 +1,5 @@
-
 with orders as (
-    
+
     select * from {{ ref('stg_tpch_orders') }}
 
 ),
@@ -10,7 +9,7 @@ line_item as (
     select * from {{ ref('stg_tpch_line_items') }}
 
 )
-select 
+select
 
     line_item.order_item_key,
     orders.order_key,
@@ -19,10 +18,7 @@ select
     line_item.supplier_key,
     orders.order_date,
     orders.status_code as order_status_code,
-    
-    
     line_item.is_return,
-    
     line_item.line_number,
     line_item.status_code as order_item_status_code,
     line_item.ship_date,
@@ -31,28 +27,38 @@ select
     line_item.ship_mode,
     line_item.extended_price,
     line_item.quantity,
-    
+
     -- extended_price is actually the line item total,
     -- so we back out the extended price per item
-    (line_item.extended_price/nullif(line_item.quantity, 0)){{ money() }} as base_price,
+    (
+        line_item.extended_price / nullif(line_item.quantity, 0)
+    ) {{ money() }} as base_price,
     line_item.discount_percentage,
-    (base_price * (1 - line_item.discount_percentage)){{ money() }} as discounted_price,
+    (
+        base_price * (1 - line_item.discount_percentage)
+    ) {{ money() }} as discounted_price,
 
     line_item.extended_price as gross_item_sales_amount,
-    (line_item.extended_price * (1 - line_item.discount_percentage)){{ money() }} as discounted_item_sales_amount,
-    -- We model discounts as negative amounts
-    (-1 * line_item.extended_price * line_item.discount_percentage){{ money() }} as item_discount_amount,
-    line_item.tax_rate,
-    ((gross_item_sales_amount + item_discount_amount) * line_item.tax_rate){{ money() }} as item_tax_amount,
     (
-        gross_item_sales_amount + 
-        item_discount_amount + 
+        line_item.extended_price * (1 - line_item.discount_percentage)
+    ) {{ money() }} as discounted_item_sales_amount,
+    -- We model discounts as negative amounts
+    (
+        -1 * line_item.extended_price * line_item.discount_percentage
+    ) {{ money() }} as item_discount_amount,
+    line_item.tax_rate,
+    (
+        (gross_item_sales_amount + item_discount_amount) * line_item.tax_rate
+    ) {{ money() }} as item_tax_amount,
+    (
+        gross_item_sales_amount +
+        item_discount_amount +
         item_tax_amount
-    ){{ money() }} as net_item_sales_amount
+    ) {{ money() }} as net_item_sales_amount
 
 from
     orders
-inner join line_item
+    inner join line_item
         on orders.order_key = line_item.order_key
 order by
-    orders.order_date
+    6
